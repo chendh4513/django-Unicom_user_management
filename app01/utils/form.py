@@ -102,3 +102,17 @@ class LoginForm(bootstrap.BootStrapForm):
         return encrypt.md5(pwd)
 
 
+class TaskModelForm(bootstrap.BootStrapModelForm):
+    class Meta:
+        model = models.Task
+        fields = "__all__"
+        widgets = {
+            # "detail": forms.Textarea,
+            "detail": forms.TextInput
+        }
+
+class OrderModelForm(bootstrap.BootStrapModelForm):
+
+    class Meta:
+        model = models.Order
+        exclude = ["oid", "admin"]

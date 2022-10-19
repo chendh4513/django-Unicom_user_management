@@ -31,31 +31,36 @@ def pretty_list(request):
 
 def pretty_add(request):
 
+    title = "新建靓号"
     if request.method == "GET":
         form = PrettyModelForm()
-        return render(request, "pretty_add.html", {"form": form})
+        return render(request, "change.html", {"form": form, "title": title})
 
     form = PrettyModelForm(data=request.POST)
     if form.is_valid():
         form.save()
         return redirect('/pretty/list')
 
-    return render(request, "pretty_add.html", {"form": form})
+    return render(request, "change.html", {"form": form, "title": title})
 
 
 def pretty_edit(request, nid):
 
-    if request.method == "GET":
-        row_object = models.PrettyNum.objects.filter(id=nid).first()
-        form = PrettyEditModelForm(instance=row_object)
-        return render(request, "pretty_edit.html", {"form": form})
     row_object = models.PrettyNum.objects.filter(id=nid).first()
+    if not row_object:
+        return redirect("/pretty/list/")
+
+    title = "编辑靓号"
+    if request.method == "GET":
+        form = PrettyEditModelForm(instance=row_object)
+        return render(request, "change.html", {"form": form, "title": title})
     form = PrettyEditModelForm(data=request.POST, instance=row_object)
     if form.is_valid():
         form.save()
         return redirect("/pretty/list/")
     else:
-        return render(request, "pretty_edit.html", {"form": form})
+        return render(request, "change.html", {"form": form, "title": title})
+
 
 
 def pretty_delete(request, nid):
