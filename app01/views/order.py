@@ -9,6 +9,7 @@ from datetime import datetime
 
 
 def order_list(request):
+
     queryset = models.Order.objects.all().order_by('-id')
 
     page_object = PagInation(request, queryset)
@@ -27,6 +28,7 @@ def order_list(request):
 def order_add(request):
 
     form = OrderModelForm(request.POST)
+
     if form.is_valid():
         form.instance.oid = datetime.now().strftime("%Y%m%d%H%M%S")+str(random.randint(1000,9999))
         form.instance.admin_id = request.session["info"]["id"]
@@ -37,12 +39,39 @@ def order_add(request):
 
 
 def order_delete(request):
-    return
+
+    uid = request.GET.get("uid")
+    exsits = models.Order.objects.filter(id=uid).exists()
+
+    if not exsits:
+        return JsonResponse({"status":False, "error":"删除失败"})
+
+    models.Order.objects.filter(id=uid).delete()
+    return JsonResponse({"status":True})
 
 
 def order_detail(request):
-    return
 
+    uid = request.GET.get("uid")
+    row_dict= models.Order.objects.filter(id=uid).values("title","id","price").first()
 
+    if not row_dict:
+        return JsonResponse({"status":False, "error":"数据不存在"})
+
+    return JsonResponse({"status": True, "data" : row_dict})
+
+@csrf_exempt
 def order_edit(request):
-    return
+
+    uid = request.GET.get("uid")
+    row_object = models.Order.objects.filter(id=uid).first()
+
+    if not row_object:
+        return JsonResponse({"status": False, "tips": "数据不存在"})
+
+    form = OrderModelForm(data=request.POST,instance=row_object)
+    if form.is_valid():
+        form.save()
+        return JsonResponse({"status": True})
+
+    return JsonResponse({"status": False, "error": form.errors})
