@@ -31,3 +31,8 @@ def task_add(request):
 
     data_dict = {"status":False, "error":form.errors}
     return HttpResponse(json.dumps(data_dict))
+
+def task_delete(request, nid):
+
+    models.Task.objects.filter(id=nid).delete()
+    return redirect('/task/list')

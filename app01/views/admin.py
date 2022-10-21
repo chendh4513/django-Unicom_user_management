@@ -58,6 +58,9 @@ def admin_edit(request, nid):
 
 def admin_delete(request, nid):
 
+    if nid == request.session["info"]["id"]:
+        return redirect("/admin/list/")
+
     row_object = models.Admin.objects.filter(id=nid).first()
     if not row_object:
         return redirect("/admin/list/")

@@ -17,11 +17,16 @@ from django.contrib import admin
 from django.urls import path,re_path
 from django.views.static import serve
 from django.conf import settings
-from app01.views import depart, user, pretty, admin, account, task, order,chart,upload,city
+from app01.views import depart, user, pretty, admin, account, task, order,chart, city, boss
 
 urlpatterns = [
 
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
+
+    # 账户管理
+    path('login/', account.login),
+    path('logout/', account.logout),
+    path('image/code/', account.image_code),
 
     #部门管理
     path('depart/list/', depart.depart_list),
@@ -50,14 +55,10 @@ urlpatterns = [
     path('admin/<int:nid>/delete/', admin.admin_delete),
     path('admin/<int:nid>/reset/', admin.admin_reset),
 
-    #账户管理
-    path('login/',account.login),
-    path('logout/',account.logout),
-    path('image/code/',account.image_code),
-
     #任务管理
     path('task/list/', task.task_list),
-    path('task/add/', task.task_add,),
+    path('task/add/', task.task_add),
+    path('task/<int:nid>/delete/', task.task_delete),
 
     # 订单管理
     path('order/list/', order.order_list),
@@ -73,14 +74,13 @@ urlpatterns = [
     path('chart/line/', chart.chart_line),
     path('chart/highcharts/', chart.highcharts),
 
-    # 上传文件
-    path('upload/list/', upload.upload_list),
-    path('upload/form/', upload.upload_form),
-    path('upload/modal/form/', upload.upload_modal_form),
-
     # 城市列表
     path('city/list/', city.city_list),
     path('city/add/', city.city_add),
+
+    # Boss列表
+    path('boss/list/', boss.boss_list),
+    path('boss/add/', boss.boss_add),
 
 
 ]
