@@ -116,3 +116,18 @@ class OrderModelForm(bootstrap.BootStrapModelForm):
     class Meta:
         model = models.Order
         exclude = ["oid", "admin"]
+
+
+class UpForm(bootstrap.BootStrapForm):
+
+    bootstrap_exclude_files = ["img"]
+
+    name = forms.CharField(label="姓名")
+    age = forms.IntegerField(label="年龄")
+    img = forms.FileField(label="头像")
+
+class UpModelForm(bootstrap.BootStrapModelForm):
+
+    class Meta:
+        model = models.City
+        fields = "__all__"
